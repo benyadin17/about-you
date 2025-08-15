@@ -2,121 +2,96 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import Lottie from 'lottie-react';
 import loveAnimation from '@/public/assets/love floating.json';
-
-// Dynamic import Swiper agar SSR-safe
-const Swiper = dynamic(() => import('swiper/react').then(mod => mod.Swiper), { ssr: false });
-const SwiperSlide = dynamic(() => import('swiper/react').then(mod => mod.SwiperSlide), { ssr: false });
-
-import { EffectCards } from 'swiper/modules';
 
 export default function ProfilePage() {
   const router = useRouter();
   const [likeAnim, setLikeAnim] = useState(false);
-  const [cardHeight, setCardHeight] = useState<number | null>(null);
-  const slide1Ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (slide1Ref.current) setCardHeight(slide1Ref.current.offsetHeight);
-  }, []);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const slides = [
+    {
+      name: 'Alex Johnson',
+      age: 28,
+      pronouns: 'He/Him',
+      photo: '/profile-photo.jpg',
+      hobbies: 'Loves hiking • Coffee addict',
+      info: [
+        { title: 'My ideal Sunday', text: 'Sunrise hike followed by brunch at a cozy local spot.' },
+        { title: 'Best concert ever', text: 'Coldplay live under the stars.' },
+      ],
+    },
+    {
+      name: 'Text Slide',
+      text: 'Sudah banyak profile yg kutemui. Kadang aku like, kadang aku skip. Sisanya menunggu keajaiban..',
+    },
+  ];
 
   const handleLike = () => {
     setLikeAnim(true);
-    setTimeout(() => router.push('/match'), 1000);
+    setTimeout(() => {
+      // next slide or navigate
+      if (slideIndex < slides.length - 1) {
+        setSlideIndex(slideIndex + 1);
+        setLikeAnim(false);
+      } else {
+        router.push('/match');
+      }
+    }, 1000);
   };
+
+  const slide = slides[slideIndex];
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
-      <Swiper
-        modules={[EffectCards]}
-        effect="cards"
-        grabCursor={true}
-        className="w-full max-w-sm h-full"
-      >
-        {/* Slide 1 */}
-        <SwiperSlide>
-          <div
-            ref={slide1Ref}
-            className="bg-white rounded-xl shadow-md overflow-hidden relative w-full"
-            style={{ minHeight: '500px' }}
-          >
-            <div className="relative">
-              <img
-                src="/profile-photo.jpg"
-                alt="Alex Johnson"
-                className="w-full h-80 object-cover"
-              />
-              <div className="absolute top-2 right-2 flex space-x-1">
-                <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">28</span>
-                <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">He/Him</span>
-              </div>
-
-              {likeAnim && (
-                <div className="absolute inset-0">
-                  <Lottie animationData={loveAnimation} loop={false} className="w-full h-full" />
-                </div>
-              )}
-            </div>
-
-            <div className="p-4 space-y-4">
-              <div>
-                <h1 className="text-2xl font-semibold">Alex Johnson</h1>
-                <p className="text-sm text-gray-500">Loves hiking • Coffee addict</p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <strong className="text-sm">My ideal Sunday:</strong>
-                  <p className="text-sm text-gray-700">
-                    Sunrise hike followed by brunch at a cozy local spot.
-                  </p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <strong className="text-sm">Best concert ever:</strong>
-                  <p className="text-sm text-gray-700">Coldplay live under the stars.</p>
-                </div>
-              </div>
-
-              <div className="flex justify-center mt-4">
-                <button
-                  onClick={handleLike}
-                  className="bg-yellow-500 text-white py-2 px-6 rounded-lg font-semibold"
-                >
-                  Like
-                </button>
-              </div>
+      <div className="bg-white rounded-xl shadow-md overflow-hidden relative w-full max-w-sm">
+        {slide.photo && (
+          <div className="relative">
+            <img src={slide.photo} alt={slide.name} className="w-full h-80 object-cover" />
+            <div className="absolute top-2 right-2 flex space-x-1">
+              <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
+                {slide.age}
+              </span>
+              <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
+                {slide.pronouns}
+              </span>
             </div>
           </div>
-        </SwiperSlide>
+        )}
 
-        {/* Slide 2 */}
-        <SwiperSlide>
-          <div
-            className="bg-white rounded-xl shadow-md overflow-hidden relative w-full"
-            style={{ height: cardHeight || '500px' }}
-          >
-            {!likeAnim ? (
-              <div className="flex flex-col justify-center items-center h-full p-4 text-center">
-                <p className="text-gray-700 text-lg">
-                  Sudah banyak profile yg kutemui. Kadang aku like, kadang aku skip. Sisanya menunggu keajaiban..
-                </p>
-                <button
-                  onClick={handleLike}
-                  className="mt-6 bg-yellow-500 text-white py-2 px-6 rounded-lg font-semibold"
-                >
-                  Like
-                </button>
-              </div>
-            ) : (
-              <div className="absolute inset-0">
-                <Lottie animationData={loveAnimation} loop={false} className="w-full h-full" />
-              </div>
-            )}
+        {likeAnim && (
+          <div className="absolute inset-0">
+            <Lottie animationData={loveAnimation} loop={false} className="w-full h-full" />
           </div>
-        </SwiperSlide>
-      </Swiper>
+        )}
+
+        <div className="p-4 space-y-4">
+          {slide.name && (
+            <>
+              <h1 className="text-2xl font-semibold">{slide.name}</h1>
+              <p className="text-sm text-gray-500">{slide.hobbies}</p>
+            </>
+          )}
+          {slide.info &&
+            slide.info.map((item, i) => (
+              <div key={i} className="bg-gray-50 p-3 rounded-lg">
+                <strong className="text-sm">{item.title}</strong>
+                <p className="text-sm text-gray-700">{item.text}</p>
+              </div>
+            ))}
+
+          {slide.text && <p className="text-gray-700 text-lg">{slide.text}</p>}
+
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={handleLike}
+              className="bg-yellow-500 text-white py-2 px-6 rounded-lg font-semibold"
+            >
+              Like
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
