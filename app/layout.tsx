@@ -1,5 +1,5 @@
 // app/layout.tsx
-import './globals.css';
+
 import 'swiper/css';
 import 'swiper/css/effect-cards';
 
