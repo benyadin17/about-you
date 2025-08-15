@@ -1,14 +1,16 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCards } from "swiper/modules";
-import Lottie from "lottie-react";
-import "swiper/css";
-import "swiper/css/effect-cards";
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import Lottie from 'lottie-react';
+import loveAnimation from '../assets/love floating.json';
 
-import loveAnimation from "../assets/love floating.json";
+// Dynamic import Swiper agar SSR-safe
+const Swiper = dynamic(() => import('swiper/react').then(mod => mod.Swiper), { ssr: false });
+const SwiperSlide = dynamic(() => import('swiper/react').then(mod => mod.SwiperSlide), { ssr: false });
+
+import { EffectCards } from 'swiper/modules';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -17,16 +19,12 @@ export default function ProfilePage() {
   const slide1Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (slide1Ref.current) {
-      setCardHeight(slide1Ref.current.offsetHeight);
-    }
+    if (slide1Ref.current) setCardHeight(slide1Ref.current.offsetHeight);
   }, []);
 
   const handleLike = () => {
     setLikeAnim(true);
-    setTimeout(() => {
-      router.push("/match");
-    }, 1000);
+    setTimeout(() => router.push('/match'), 1000);
   };
 
   return (
@@ -37,12 +35,12 @@ export default function ProfilePage() {
         grabCursor={true}
         className="w-full max-w-sm h-full"
       >
-        {/* Slide 1: Profile */}
+        {/* Slide 1 */}
         <SwiperSlide>
           <div
             ref={slide1Ref}
             className="bg-white rounded-xl shadow-md overflow-hidden relative w-full"
-            style={{ minHeight: "500px" }} // fallback min height
+            style={{ minHeight: '500px' }}
           >
             <div className="relative">
               <img
@@ -51,12 +49,8 @@ export default function ProfilePage() {
                 className="w-full h-80 object-cover"
               />
               <div className="absolute top-2 right-2 flex space-x-1">
-                <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
-                  28
-                </span>
-                <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
-                  He/Him
-                </span>
+                <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">28</span>
+                <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">He/Him</span>
               </div>
 
               {likeAnim && (
@@ -97,17 +91,16 @@ export default function ProfilePage() {
           </div>
         </SwiperSlide>
 
-        {/* Slide 2: Full Page Text */}
+        {/* Slide 2 */}
         <SwiperSlide>
           <div
             className="bg-white rounded-xl shadow-md overflow-hidden relative w-full"
-            style={{ height: cardHeight || "500px" }} // tinggi sama seperti slide 1
+            style={{ height: cardHeight || '500px' }}
           >
-            {!likeAnim && (
+            {!likeAnim ? (
               <div className="flex flex-col justify-center items-center h-full p-4 text-center">
                 <p className="text-gray-700 text-lg">
-                  Sudah banyak profile yg kutemui. Kadang aku like, kadang aku skip.
-                  Sisanya menunggu keajaiban..
+                  Sudah banyak profile yg kutemui. Kadang aku like, kadang aku skip. Sisanya menunggu keajaiban..
                 </p>
                 <button
                   onClick={handleLike}
@@ -116,9 +109,7 @@ export default function ProfilePage() {
                   Like
                 </button>
               </div>
-            )}
-
-            {likeAnim && (
+            ) : (
               <div className="absolute inset-0">
                 <Lottie animationData={loveAnimation} loop={false} className="w-full h-full" />
               </div>
