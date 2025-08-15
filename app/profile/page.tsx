@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Lottie from 'lottie-react';
-import loveAnimation from '../assets/love floating.json';
+import loveAnimation from '@/public/assets/love floating.json';
 
 // Dynamic import Swiper agar SSR-safe
 const Swiper = dynamic(() => import('swiper/react').then(mod => mod.Swiper), { ssr: false });
