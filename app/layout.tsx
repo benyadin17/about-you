@@ -1,4 +1,6 @@
 import "./globals.css";
+import "swiper/css";
+import "swiper/css/effect-cards";
 
 export default function RootLayout({
   children,
