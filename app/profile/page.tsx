@@ -23,6 +23,8 @@ export default function ProfilePage() {
       info: [
         { title: 'My ideal Sunday', text: 'Sunrise hike followed by brunch at a cozy local spot.' },
         { title: 'Best concert ever', text: 'Coldplay live under the stars.' },
+        { title: 'Extra info', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
+        { title: 'Extra info 2', text: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' },
       ],
     },
     {
@@ -45,12 +47,12 @@ export default function ProfilePage() {
         effect="cards"
         grabCursor={true}
         modules={[EffectCards]}
-        className="w-full max-w-sm h-[500px]"
-        touchEventsTarget="container" // fix swipe Safari
+        className="w-full max-w-sm h-[calc(100vh-32px)]" // full device height minus padding
+        touchEventsTarget="container"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-white rounded-xl shadow-md overflow-hidden relative w-full h-full flex flex-col">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden relative w-full h-full flex flex-col mx-2 my-2">
               {/* Foto */}
               {slide.photo && (
                 <div className="relative flex-shrink-0 h-80">
@@ -74,8 +76,8 @@ export default function ProfilePage() {
               )}
 
               {/* Konten bawah */}
-              <div className="p-4 space-y-4 flex-1 flex flex-col justify-between">
-                <div className="flex-1">
+              <div className="p-4 flex-1 flex flex-col justify-between overflow-hidden">
+                <div className="flex-1 overflow-y-auto">
                   {slide.name && (
                     <>
                       <h1 className="text-2xl font-semibold">{slide.name}</h1>
@@ -92,7 +94,7 @@ export default function ProfilePage() {
                     ))}
 
                   {slide.text && (
-                    <div className="h-[150px] flex items-center justify-center">
+                    <div className="flex items-center justify-center h-[150px]">
                       <p className="text-gray-700 text-lg text-center">{slide.text}</p>
                     </div>
                   )}
