@@ -66,15 +66,15 @@ export default function ProfilePage() {
         effect="cards"
         grabCursor={true}
         modules={[EffectCards]}
-        className="w-full max-w-sm h-[85vh] mx-auto"
+        className="w-full max-w-sm h-[90vh] mx-auto"
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         touchEventsTarget="container"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div className="bg-white shadow-md overflow-hidden w-full h-full mx-2 my-2 flex flex-col rounded-3xl relative">
-              {/* Slide 1 scrollable */}
+            <div className="bg-white shadow-md overflow-hidden w-full h-full mx-2 my-4 flex flex-col rounded-3xl relative">
               {index === 0 ? (
+                // Slide 1 scrollable dari foto sampai konten bawah
                 <div className="flex-1 overflow-y-auto">
                   {/* Foto */}
                   {slide.photo && (
@@ -108,7 +108,7 @@ export default function ProfilePage() {
                         </div>
                       ))}
 
-                    {/* Tombol */}
+                    {/* Tombol Like/X */}
                     <div className="flex justify-center mt-2 space-x-2">
                       <button
                         onClick={handleDislike}
@@ -144,14 +144,12 @@ export default function ProfilePage() {
                 </div>
               )}
 
-              {/* Like animation */}
+              {/* Animasi */}
               {likeAnim && (
                 <div className="absolute inset-0 z-10">
                   <Lottie animationData={loveAnimation} loop={false} className="w-full h-full" />
                 </div>
               )}
-
-              {/* Dislike X overlay sederhana */}
               {dislikeAnim && (
                 <div className="absolute inset-0 z-20 flex items-center justify-center bg-red-500 bg-opacity-30">
                   <span className="text-white text-6xl font-bold">X</span>
