@@ -1,14 +1,18 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Lottie from 'lottie-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCards } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/effect-cards';
 import loveAnimation from '@/public/assets/love floating.json';
 
 export default function ProfilePage() {
   const router = useRouter();
   const [likeAnim, setLikeAnim] = useState(false);
-  const [slideIndex, setSlideIndex] = useState(0);
+
   const slides = [
     {
       name: 'Alex Johnson',
@@ -30,68 +34,78 @@ export default function ProfilePage() {
   const handleLike = () => {
     setLikeAnim(true);
     setTimeout(() => {
-      // next slide or navigate
-      if (slideIndex < slides.length - 1) {
-        setSlideIndex(slideIndex + 1);
-        setLikeAnim(false);
-      } else {
-        router.push('/match');
-      }
+      setLikeAnim(false);
+      router.push('/match');
     }, 1000);
   };
 
-  const slide = slides[slideIndex];
-
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
-      <div className="bg-white rounded-xl shadow-md overflow-hidden relative w-full max-w-sm">
-        {slide.photo && (
-          <div className="relative">
-            <img src={slide.photo} alt={slide.name} className="w-full h-80 object-cover" />
-            <div className="absolute top-2 right-2 flex space-x-1">
-              <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
-                {slide.age}
-              </span>
-              <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
-                {slide.pronouns}
-              </span>
-            </div>
-          </div>
-        )}
+      <Swiper
+        effect={'cards'}
+        grabCursor={true}
+        modules={[EffectCards]}
+        className="w-full max-w-sm h-[500px]"
+      >
+        {slides.map((slide, index) => (
+          <SwiperSlide key={index}>
+            <div className="bg-white rounded-xl shadow-md overflow-hidden relative w-full h-full flex flex-col">
+              {slide.photo && (
+                <div className="relative flex-shrink-0 h-80">
+                  <img src={slide.photo} alt={slide.name} className="w-full h-full object-cover" />
+                  <div className="absolute top-2 right-2 flex space-x-1">
+                    <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
+                      {slide.age}
+                    </span>
+                    <span className="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">
+                      {slide.pronouns}
+                    </span>
+                  </div>
+                </div>
+              )}
 
-        {likeAnim && (
-          <div className="absolute inset-0">
-            <Lottie animationData={loveAnimation} loop={false} className="w-full h-full" />
-          </div>
-        )}
+              {likeAnim && (
+                <div className="absolute inset-0 z-10">
+                  <Lottie animationData={loveAnimation} loop={false} className="w-full h-full" />
+                </div>
+              )}
 
-        <div className="p-4 space-y-4">
-          {slide.name && (
-            <>
-              <h1 className="text-2xl font-semibold">{slide.name}</h1>
-              <p className="text-sm text-gray-500">{slide.hobbies}</p>
-            </>
-          )}
-          {slide.info &&
-            slide.info.map((item, i) => (
-              <div key={i} className="bg-gray-50 p-3 rounded-lg">
-                <strong className="text-sm">{item.title}</strong>
-                <p className="text-sm text-gray-700">{item.text}</p>
+              {/* Konten bawah */}
+              <div className="p-4 space-y-4 flex-1 flex flex-col justify-between">
+                <div className="flex-1">
+                  {slide.name && (
+                    <>
+                      <h1 className="text-2xl font-semibold">{slide.name}</h1>
+                      <p className="text-sm text-gray-500">{slide.hobbies}</p>
+                    </>
+                  )}
+                  {slide.info &&
+                    slide.info.map((item, i) => (
+                      <div key={i} className="bg-gray-50 p-3 rounded-lg mt-2">
+                        <strong className="text-sm">{item.title}</strong>
+                        <p className="text-sm text-gray-700">{item.text}</p>
+                      </div>
+                    ))}
+                  {slide.text && (
+                    <div className="h-[150px] flex items-center justify-center">
+                      <p className="text-gray-700 text-lg text-center">{slide.text}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={handleLike}
+                    className="bg-yellow-500 text-white py-2 px-6 rounded-lg font-semibold"
+                  >
+                    Like
+                  </button>
+                </div>
               </div>
-            ))}
-
-          {slide.text && <p className="text-gray-700 text-lg">{slide.text}</p>}
-
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={handleLike}
-              className="bg-yellow-500 text-white py-2 px-6 rounded-lg font-semibold"
-            >
-              Like
-            </button>
-          </div>
-        </div>
-      </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 }
