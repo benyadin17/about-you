@@ -25,6 +25,7 @@ export default function ProfilePage() {
         { title: 'Best concert ever', text: 'Coldplay live under the stars.' },
         { title: 'Extra info', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' },
         { title: 'Extra info 2', text: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' },
+        { title: 'Extra info 3', text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.' },
       ],
     },
     {
@@ -76,7 +77,8 @@ export default function ProfilePage() {
               )}
 
               {/* Konten bawah */}
-              <div className="p-4 flex-1 flex flex-col justify-between overflow-hidden">
+              <div className="p-4 flex-1 flex flex-col overflow-hidden">
+                {/* Wrapper scrollable */}
                 <div className="flex-1 overflow-y-auto">
                   {slide.name && (
                     <>
@@ -100,7 +102,7 @@ export default function ProfilePage() {
                   )}
                 </div>
 
-                {/* Tombol Like */}
+                {/* Tombol Like tetap di bawah */}
                 <div className="flex justify-center mt-4">
                   <button
                     onClick={handleLike}
