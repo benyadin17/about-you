@@ -42,14 +42,16 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
       <Swiper
-        effect={'cards'}
+        effect="cards"
         grabCursor={true}
         modules={[EffectCards]}
         className="w-full max-w-sm h-[500px]"
+        touchEventsTarget="container" // fix swipe Safari
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
             <div className="bg-white rounded-xl shadow-md overflow-hidden relative w-full h-full flex flex-col">
+              {/* Foto */}
               {slide.photo && (
                 <div className="relative flex-shrink-0 h-80">
                   <img src={slide.photo} alt={slide.name} className="w-full h-full object-cover" />
@@ -64,6 +66,7 @@ export default function ProfilePage() {
                 </div>
               )}
 
+              {/* Like Animation */}
               {likeAnim && (
                 <div className="absolute inset-0 z-10">
                   <Lottie animationData={loveAnimation} loop={false} className="w-full h-full" />
@@ -79,6 +82,7 @@ export default function ProfilePage() {
                       <p className="text-sm text-gray-500">{slide.hobbies}</p>
                     </>
                   )}
+
                   {slide.info &&
                     slide.info.map((item, i) => (
                       <div key={i} className="bg-gray-50 p-3 rounded-lg mt-2">
@@ -86,6 +90,7 @@ export default function ProfilePage() {
                         <p className="text-sm text-gray-700">{item.text}</p>
                       </div>
                     ))}
+
                   {slide.text && (
                     <div className="h-[150px] flex items-center justify-center">
                       <p className="text-gray-700 text-lg text-center">{slide.text}</p>
@@ -93,6 +98,7 @@ export default function ProfilePage() {
                   )}
                 </div>
 
+                {/* Tombol Like */}
                 <div className="flex justify-center mt-4">
                   <button
                     onClick={handleLike}
