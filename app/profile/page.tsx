@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Lottie from 'lottie-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -12,6 +12,8 @@ import loveAnimation from '@/public/assets/love floating.json';
 export default function ProfilePage() {
   const router = useRouter();
   const [likeAnim, setLikeAnim] = useState(false);
+  const [dislikeAnim, setDislikeAnim] = useState(false);
+  const swiperRef = useRef<any>(null);
 
   const slides = [
     {
@@ -38,8 +40,24 @@ export default function ProfilePage() {
     setLikeAnim(true);
     setTimeout(() => {
       setLikeAnim(false);
-      router.push('/match');
-    }, 1000);
+      if (swiperRef.current && swiperRef.current.activeIndex < slides.length - 1) {
+        swiperRef.current.slideNext();
+      } else {
+        router.push('/match');
+      }
+    }, 800);
+  };
+
+  const handleDislike = () => {
+    setDislikeAnim(true);
+    setTimeout(() => {
+      setDislikeAnim(false);
+      if (swiperRef.current && swiperRef.current.activeIndex < slides.length - 1) {
+        swiperRef.current.slideNext();
+      } else {
+        router.push('/match');
+      }
+    }, 800);
   };
 
   return (
@@ -48,16 +66,15 @@ export default function ProfilePage() {
         effect="cards"
         grabCursor={true}
         modules={[EffectCards]}
-        className="w-full max-w-sm h-[calc(100vh-32px)]"
+        className="w-full max-w-sm h-[85vh] mx-auto"
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
         touchEventsTarget="container"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div
-              className="bg-white shadow-md overflow-hidden w-full h-full mx-2 my-2 flex flex-col rounded-3xl"
-            >
+            <div className="bg-white shadow-md overflow-hidden w-full h-full mx-2 my-2 flex flex-col rounded-3xl relative">
+              {/* Slide 1 scrollable */}
               {index === 0 ? (
-                // Slide 1 scrollable dari foto sampai bawah
                 <div className="flex-1 overflow-y-auto">
                   {/* Foto */}
                   {slide.photo && (
@@ -74,7 +91,7 @@ export default function ProfilePage() {
                     </div>
                   )}
 
-                  {/* Konten bawah */}
+                  {/* Konten */}
                   <div className="p-4 flex flex-col space-y-4">
                     {slide.name && (
                       <>
@@ -91,8 +108,14 @@ export default function ProfilePage() {
                         </div>
                       ))}
 
-                    {/* Tombol Like */}
-                    <div className="flex justify-center mt-2">
+                    {/* Tombol */}
+                    <div className="flex justify-center mt-2 space-x-2">
+                      <button
+                        onClick={handleDislike}
+                        className="bg-red-500 text-white py-2 px-6 rounded-lg font-semibold"
+                      >
+                        X
+                      </button>
                       <button
                         onClick={handleLike}
                         className="bg-yellow-500 text-white py-2 px-6 rounded-lg font-semibold"
@@ -110,7 +133,6 @@ export default function ProfilePage() {
                       <p className="text-gray-700 text-lg text-center">{slide.text}</p>
                     </div>
                   )}
-
                   <div className="flex justify-center mt-4">
                     <button
                       onClick={handleLike}
@@ -122,10 +144,17 @@ export default function ProfilePage() {
                 </div>
               )}
 
-              {/* Like Animation di atas semua */}
+              {/* Like animation */}
               {likeAnim && (
                 <div className="absolute inset-0 z-10">
                   <Lottie animationData={loveAnimation} loop={false} className="w-full h-full" />
+                </div>
+              )}
+
+              {/* Dislike X overlay sederhana */}
+              {dislikeAnim && (
+                <div className="absolute inset-0 z-20 flex items-center justify-center bg-red-500 bg-opacity-30">
+                  <span className="text-white text-6xl font-bold">X</span>
                 </div>
               )}
             </div>
